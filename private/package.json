@@ -16,7 +16,7 @@
     "lint:scripts": "eslint ./src/",
     "lint:styles": "stylelint \"src/**/*.scss\"",
     "lint": "yarn lint:scripts; yarn lint:styles",
-    "env": "yarn dlx @wordpress/env"
+    "env": "yarn dlx @wordpress/env",
     "build:css": "webpack --config private/webpack.config.js --env entry=style"
   },
   "devDependencies": {
