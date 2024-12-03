@@ -17,7 +17,7 @@
     "lint:styles": "stylelint \"src/**/*.scss\"",
     "lint": "yarn lint:scripts; yarn lint:styles",
     "env": "yarn dlx @wordpress/env",
-    "build:css": "webpack --config private/webpack.config.js --env entry=style"
+    "build:css": "webpack --config webpack.config.js --env entry=style"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",
