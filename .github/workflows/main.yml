@@ -1,0 +1,41 @@
+name: SCSS Lint, Compile, and Package
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Compile SCSS to CSS
+      run: npm run build:css
+
+    - name: Run Tests
+      run: npm test
+
+    - name: Archive production artifacts
+      run: zip -r theme.zip . -x "*.git*" "node_modules/*" "private/node_modules/*" "*.DS_Store*"
+      # Adjust the paths and exclusions according to your project structure
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: theme-zip
+        path: theme.zip
