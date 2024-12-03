@@ -31,11 +31,11 @@ jobs:
       run: npm test
 
     - name: Archive production artifacts
-      run: zip -r theme.zip . -x "*.git*" "node_modules/*" "private/node_modules/*" "*.DS_Store*"
+      run: zip -r AM-theme.zip . -x "*.git*" "node_modules/*" "private/node_modules/*" "*.DS_Store*"
       # Adjust the paths and exclusions according to your project structure
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: theme-zip
-        path: theme.zip
+        name: AM-theme-zip
+        path: AM-theme.zip
