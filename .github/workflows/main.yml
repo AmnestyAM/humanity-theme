@@ -60,7 +60,7 @@ jobs:
             }
           }
     - name: Archive production artifacts
-      run: zip -r humanity-theme-playground.zip wp-content/themes
+      run: zip -r humanity-theme-playground.zip wp-content/themes/humanity-theme
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
