@@ -22,11 +22,10 @@ jobs:
       run: cd private && yarn
     - name: Compile SCSS to CSS
       run: cd private && yarn build
+    - name: Verify directory
+      run: ls -R humanity-theme-playground/wp-content/themes
     - name: Archive production artifacts
-      run: |
-         ls -R humanity-theme-playground/wp-content/themes # List the directory contents for verification
-         zip -r ./humanity-theme-playground.zip ./humanity-theme-playground/wp-content/themes
-      # Adjust the paths and exclusions according to your project structure
+      run: zip -r humanity-theme-playground.zip humanity-theme-playground/wp-content/themes
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
