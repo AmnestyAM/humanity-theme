@@ -6,7 +6,7 @@ If you'd like to contribute to the theme, see the [contributing](#contributing).
 ## Minimum Requirements
 This theme requires:   
 - WordPress 5.8+
-- PHP 8.2+ with the Intl extension
+- PHP 8.2+ with the Intl extension  
 
 ## Required Plugins  
 We currently rely upon CMB2 and CMB2 extensions for settings management, but our eventual goal is to remove these dependencies.  
