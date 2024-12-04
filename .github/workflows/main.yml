@@ -60,12 +60,12 @@ jobs:
             }
           }
     - name: Archive production artifacts
-      run: cd wp-content/themes/humanity-theme && zip -r ../../../humanity-theme-playground.zip ./
+      run: cd wp-content/themes/humanity-theme && zip -r ../../../humanity-theme.zip ./
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: humanity-theme-playground-zip
-        path: humanity-theme-playground.zip
+        name: humanity-theme-zip
+        path: humanity-theme.zip
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -83,8 +83,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.RELEASE2 }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./humanity-theme-playground.zip
-        asset_name: humanity-theme-playground.zip
+        asset_path: ./humanity-theme.zip
+        asset_name: humanity-theme.zip
         asset_content_type: application/zip        
 
 # add POMO file support
