@@ -60,9 +60,7 @@ jobs:
             }
           }
     - name: Archive production artifacts
-      run: cd wp-content/themes/humanity-theme && zip -r ../../humanity-theme-playground.zip ./humanity-theme
-    - name: Check for ZIP file
-      run: find . -name "humanity-theme-playground.zip" -exec ls -la {} \;
+      run: cd wp-content/themes/humanity-theme && zip -r ../../../humanity-theme-playground.zip ./humanity-theme
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
