@@ -16,12 +16,12 @@ jobs:
         node-version: '20'
     - name: Checkout repository
       uses: actions/checkout@v3
+    - name: Enable Corepack
+      run: corepack enable
     - name: Install dependencies
       run: cd private && yarn
     - name: Compile SCSS to CSS
       run: cd private && yarn build
-    - name: Enable Corepack
-      run: corepack enable
     - name: Delete Existing Release
       uses: actions/github-script@v6
       with:
