@@ -35,24 +35,20 @@ jobs:
       uses: actions/github-script@v6
       with:
         script: |
+          const { GitHub } = require('@actions/github');
+          const github = new GitHub(process.env.RELEASE2);
           const tagName = 'playground';
           const owner = context.repo.owner;
           const repo = context.repo.repo;
 
-          // Get release by tag name
-          const release = await github.repos.getReleaseByTag({
-            owner: owner,
-            repo: repo,
-            tag: tagName
-          }).catch(error => {
-            if (error.status === 404) {
-              console.log(`Release with tag ${tagName} not found.`);
-              return;
-            }
-            throw error;
-          });
+          try {
+            // Get release by tag name
+            const release = await github.repos.getReleaseByTag({
+              owner: owner,
+              repo: repo,
+              tag: tagName
+            });
 
-          if (release) {
             // Delete the release
             await github.repos.deleteRelease({
               owner: owner,
@@ -68,6 +64,12 @@ jobs:
               ref: `tags/${tagName}`
             });
             console.log(`Deleted tag ${tagName}.`);
+          } catch (error) {
+            if (error.status === 404) {
+              console.log(`Release with tag ${tagName} not found.`);
+            } else {
+              throw error;
+            }
           }
     - name: Create Release
       id: create_release
