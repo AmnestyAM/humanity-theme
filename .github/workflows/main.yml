@@ -22,10 +22,6 @@ jobs:
       run: cd private && yarn
     - name: Compile SCSS to CSS
       run: cd private && yarn build
-    - name: Verify directory
-      run: ls -d *wp-content/
-    - name: Archive production artifacts
-      run: zip -r humanity-theme-playground.zip wp-content/themes
     - name: Delete Existing Release
       uses: actions/github-script@v6
       with:
@@ -67,6 +63,8 @@ jobs:
               throw error;
             }
           }
+    - name: Archive production artifacts
+      run: zip -r humanity-theme-playground.zip wp-content/themes
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
