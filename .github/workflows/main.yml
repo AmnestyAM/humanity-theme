@@ -10,18 +10,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '20'
     - name: Enable Corepack
       run: corepack enable
-    - name: Install dependencies
-      run: cd private && yarn
-    - name: Compile SCSS to CSS
-      run: cd private && yarn build
+    - name: Install Octokit
+      run: npm install @octokit/rest
     - name: Delete Existing Release
       uses: actions/github-script@v6
       with:
@@ -63,6 +59,12 @@ jobs:
               throw error;
             }
           }
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Install dependencies
+      run: cd private && yarn
+    - name: Compile SCSS to CSS
+      run: cd private && yarn build
     - name: Archive production artifacts
       run: zip -r humanity-theme-playground.zip wp-content/themes
     - name: Upload artifact
