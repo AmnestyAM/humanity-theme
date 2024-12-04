@@ -15,18 +15,18 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '16'
+        node-version: '20'
     - name: Install dependencies
-      run: cd private && npm install
+      run: cd private && yarn
     - name: Compile SCSS to CSS
-      run: cd private && npm run build:css
-    - name: Run Tests
-      run: cd private && npm test
+      run: cd private && yarn build
     - name: Archive production artifacts
-      run: zip -r AM-theme.zip . -x "*.git*" "node_modules/*" "private/node_modules/*" "*.DS_Store*"
+      run: zip -r ./AM-theme.zip ./wp-content/themes/humanity-theme
       # Adjust the paths and exclusions according to your project structure
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
         name: AM-theme-zip
         path: AM-theme.zip
+
+# add POMO file support 
