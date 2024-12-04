@@ -14,6 +14,12 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '20'
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Install dependencies
+      run: cd private && yarn
+    - name: Compile SCSS to CSS
+      run: cd private && yarn build
     - name: Enable Corepack
       run: corepack enable
     - name: Delete Existing Release
@@ -59,12 +65,6 @@ jobs:
               }
             }
           })();
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Install dependencies
-      run: cd private && yarn
-    - name: Compile SCSS to CSS
-      run: cd private && yarn build
     - name: Archive production artifacts
       run: zip -r humanity-theme-playground.zip wp-content/themes
     - name: Upload artifact
