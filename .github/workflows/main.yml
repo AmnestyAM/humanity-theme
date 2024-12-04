@@ -16,49 +16,49 @@ jobs:
         node-version: '20'
     - name: Enable Corepack
       run: corepack enable
-    - name: Install Octokit
-      run: npm install @octokit/rest
     - name: Delete Existing Release
       uses: actions/github-script@v6
       with:
         script: |
-          const { Octokit } = require("@octokit/rest");
-          const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-          const tagName = 'playground';
-          const { owner, repo } = context.repo;
+          (async () => {
+            const { Octokit } = await import("@octokit/rest");
+            const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+            const tagName = 'playground';
+            const { owner, repo } = context.repo;
 
-          try {
-            // Get release by tag name
-            const release = await octokit.repos.getReleaseByTag({
-              owner: owner,
-              repo: repo,
-              tag: tagName
-            });
-
-            if (release) {
-              // Delete the release
-              await octokit.repos.deleteRelease({
+            try {
+              // Get release by tag name
+              const release = await octokit.repos.getReleaseByTag({
                 owner: owner,
                 repo: repo,
-                release_id: release.data.id
+                tag: tagName
               });
-              console.log(`Deleted release with tag ${tagName}.`);
 
-              // Delete the tag
-              await octokit.git.deleteRef({
-                owner: owner,
-                repo: repo,
-                ref: `tags/${tagName}`
-              });
-              console.log(`Deleted tag ${tagName}.`);
+              if (release) {
+                // Delete the release
+                await octokit.repos.deleteRelease({
+                  owner: owner,
+                  repo: repo,
+                  release_id: release.data.id
+                });
+                console.log(`Deleted release with tag ${tagName}.`);
+
+                // Delete the tag
+                await octokit.git.deleteRef({
+                  owner: owner,
+                  repo: repo,
+                  ref: `tags/${tagName}`
+                });
+                console.log(`Deleted tag ${tagName}.`);
+              }
+            } catch (error) {
+              if (error.status === 404) {
+                console.log(`Release with tag ${tagName} not found.`);
+              } else {
+                throw error;
+              }
             }
-          } catch (error) {
-            if (error.status === 404) {
-              console.log(`Release with tag ${tagName} not found.`);
-            } else {
-              throw error;
-            }
-          }
+          })();
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Install dependencies
