@@ -26,42 +26,42 @@ jobs:
       uses: actions/github-script@v6
       with:
         script: |
-          const tagName = 'playground';
-          const owner = context.repo.owner;
-          const repo = context.repo.repo;
+            const tagName = 'playground';
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
 
-          try {
-            // Get release by tag name
-            const release = await github.repos.getReleaseByTag({
-              owner: owner,
-              repo: repo,
-              tag: tagName
-            });
+            try {
+              // Get release by tag name
+              const release = await octokit.repos.getReleaseByTag({
+                owner: owner,
+                repo: repo,
+                tag: tagName
+              });
 
             if (release) {
               // Delete the release
-              await github.repos.deleteRelease({
+              await octokit.repos.deleteRelease({
                 owner: owner,
                 repo: repo,
                 release_id: release.data.id
               });
               console.log(`Deleted release with tag ${tagName}.`);
-
+    
               // Delete the tag
-              await github.git.deleteRef({
+              await octokit.git.deleteRef({
                 owner: owner,
                 repo: repo,
                 ref: `tags/${tagName}`
               });
               console.log(`Deleted tag ${tagName}.`);
             }
-          } catch (error) {
-            if (error.status === 404) {
-              console.log(`Release with tag ${tagName} not found.`);
-            } else {
-              throw error;
+            }     catch (error) {
+              if (error.status === 404) {
+                console.log(`Release with tag ${tagName} not found.`);
+              } else {
+                throw error;
+              }
             }
-          }
     - name: Archive production artifacts
       run: zip -r humanity-theme-playground.zip wp-content/themes
     - name: Upload artifact
