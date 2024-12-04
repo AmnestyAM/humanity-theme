@@ -23,12 +23,32 @@ jobs:
     - name: Compile SCSS to CSS
       run: cd private && yarn build
     - name: Archive production artifacts
-      run: zip -r ./AM-theme.zip ./wp-content/themes/humanity-theme
+      run: zip -r ./humanity-theme-playground.zip ./wp-content/themes/humanity-theme
       # Adjust the paths and exclusions according to your project structure
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: AM-theme-zip
-        path: AM-theme.zip
+        name: humanity-theme-playground-zip
+        path: humanity-theme-playground.zip
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASE }}
+      with:
+        tag_name: 'playground' # Adjust the tag name as needed
+        release_name: 'Playground Theme Release'
+        body: 'Release of the Humanity Theme for WordPress Playground'
+        draft: false
+        prerelease: false
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASE }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./humanity-theme-playground.zip
+        asset_name: humanity-theme-playground.zip
+        asset_content_type: application/zip        
 
 # add POMO file support 
