@@ -4,7 +4,7 @@ If you'd like to use it yourself, see the [usage](#usage) section.
 If you'd like to contribute to the theme, see the [contributing](#contributing).  
 
 ## Minimum Requirements
-This theme requires:   
+This theme requires:     
 - WordPress 5.8+
 - PHP 8.2+ with the Intl extension  
 
