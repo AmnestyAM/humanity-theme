@@ -23,30 +23,28 @@ jobs:
     - name: Compile SCSS to CSS
       run: cd private && yarn build
     - name: Delete Existing Release
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         script: |
-          const { Octokit } = require("@octokit/rest");
-          const octokit = new Octokit({ auth: process.env.RELEASE2 });
           const tagName = 'playground';
           const { owner, repo } = context.repo;
     
           try {
-            const release = await octokit.repos.getReleaseByTag({
+            const release = await github.rest.repos.getReleaseByTag({
               owner: owner,
               repo: repo,
               tag: tagName
             });
     
             if (release) {
-              await octokit.repos.deleteRelease({
+              await github.rest.repos.deleteRelease({
                 owner: owner,
                 repo: repo,
                 release_id: release.data.id
               });
               console.log(`Deleted release with tag ${tagName}.`);
     
-              await octokit.git.deleteRef({
+              await github.rest.git.deleteRef({
                 owner: owner,
                 repo: repo,
                 ref: `tags/${tagName}`
