@@ -31,6 +31,44 @@ jobs:
       with:
         name: humanity-theme-playground-zip
         path: humanity-theme-playground.zip
+    - name: Delete Existing Release
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const tagName = 'playground';
+          const owner = context.repo.owner;
+          const repo = context.repo.repo;
+
+          // Get release by tag name
+          const release = await github.repos.getReleaseByTag({
+            owner: owner,
+            repo: repo,
+            tag: tagName
+          }).catch(error => {
+            if (error.status === 404) {
+              console.log(`Release with tag ${tagName} not found.`);
+              return;
+            }
+            throw error;
+          });
+
+          if (release) {
+            // Delete the release
+            await github.repos.deleteRelease({
+              owner: owner,
+              repo: repo,
+              release_id: release.data.id
+            });
+            console.log(`Deleted release with tag ${tagName}.`);
+
+            // Delete the tag
+            await github.git.deleteRef({
+              owner: owner,
+              repo: repo,
+              ref: `tags/${tagName}`
+            });
+            console.log(`Deleted tag ${tagName}.`);
+          }
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -52,4 +90,4 @@ jobs:
         asset_name: humanity-theme-playground.zip
         asset_content_type: application/zip        
 
-# add POMO file support 
+# add POMO file support
