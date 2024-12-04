@@ -26,27 +26,26 @@ jobs:
       uses: actions/github-script@v6
       with:
         script: |
+          const { Octokit } = require("@octokit/rest");
+          const octokit = new Octokit({ auth: process.env.RELEASE2 });
           const tagName = 'playground';
           const { owner, repo } = context.repo;
-
+    
           try {
-            // Get release by tag name
             const release = await octokit.repos.getReleaseByTag({
               owner: owner,
               repo: repo,
               tag: tagName
             });
-
+    
             if (release) {
-              // Delete the release
               await octokit.repos.deleteRelease({
                 owner: owner,
                 repo: repo,
                 release_id: release.data.id
               });
               console.log(`Deleted release with tag ${tagName}.`);
-
-              // Delete the tag
+    
               await octokit.git.deleteRef({
                 owner: owner,
                 repo: repo,
@@ -58,6 +57,7 @@ jobs:
             if (error.status === 404) {
               console.log(`Release with tag ${tagName} not found.`);
             } else {
+              console.error(`Error deleting release: ${error.message}`);
               throw error;
             }
           }
