@@ -26,45 +26,41 @@ jobs:
       uses: actions/github-script@v6
       with:
         script: |
-          (async () => {
-            const { Octokit } = await import("@octokit/rest");
-            const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-            const tagName = 'playground';
-            const { owner, repo } = context.repo;
+          const tagName = 'playground';
+          const { owner, repo } = context.repo;
 
-            try {
-              // Get release by tag name
-              const release = await octokit.repos.getReleaseByTag({
+          try {
+            // Get release by tag name
+            const release = await octokit.repos.getReleaseByTag({
+              owner: owner,
+              repo: repo,
+              tag: tagName
+            });
+
+            if (release) {
+              // Delete the release
+              await octokit.repos.deleteRelease({
                 owner: owner,
                 repo: repo,
-                tag: tagName
+                release_id: release.data.id
               });
+              console.log(`Deleted release with tag ${tagName}.`);
 
-              if (release) {
-                // Delete the release
-                await octokit.repos.deleteRelease({
-                  owner: owner,
-                  repo: repo,
-                  release_id: release.data.id
-                });
-                console.log(`Deleted release with tag ${tagName}.`);
-
-                // Delete the tag
-                await octokit.git.deleteRef({
-                  owner: owner,
-                  repo: repo,
-                  ref: `tags/${tagName}`
-                });
-                console.log(`Deleted tag ${tagName}.`);
-              }
-            } catch (error) {
-              if (error.status === 404) {
-                console.log(`Release with tag ${tagName} not found.`);
-              } else {
-                throw error;
-              }
+              // Delete the tag
+              await octokit.git.deleteRef({
+                owner: owner,
+                repo: repo,
+                ref: `tags/${tagName}`
+              });
+              console.log(`Deleted tag ${tagName}.`);
             }
-          })();
+          } catch (error) {
+            if (error.status === 404) {
+              console.log(`Release with tag ${tagName} not found.`);
+            } else {
+              throw error;
+            }
+          }
     - name: Archive production artifacts
       run: zip -r humanity-theme-playground.zip wp-content/themes
     - name: Upload artifact
