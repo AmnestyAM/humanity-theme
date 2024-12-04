@@ -26,17 +26,11 @@ jobs:
       run: ls -d *wp-content/
     - name: Archive production artifacts
       run: zip -r humanity-theme-playground.zip wp-content/themes
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: humanity-theme-playground-zip
-        path: humanity-theme-playground.zip
     - name: Delete Existing Release
       uses: actions/github-script@v6
       with:
         script: |
-          const { GitHub } = require('@actions/github');
-          const github = new GitHub(process.env.RELEASE2);
+          const github = require('@actions/github');
           const tagName = 'playground';
           const owner = context.repo.owner;
           const repo = context.repo.repo;
@@ -49,21 +43,23 @@ jobs:
               tag: tagName
             });
 
-            // Delete the release
-            await github.repos.deleteRelease({
-              owner: owner,
-              repo: repo,
-              release_id: release.data.id
-            });
-            console.log(`Deleted release with tag ${tagName}.`);
+            if (release) {
+              // Delete the release
+              await github.repos.deleteRelease({
+                owner: owner,
+                repo: repo,
+                release_id: release.data.id
+              });
+              console.log(`Deleted release with tag ${tagName}.`);
 
-            // Delete the tag
-            await github.git.deleteRef({
-              owner: owner,
-              repo: repo,
-              ref: `tags/${tagName}`
-            });
-            console.log(`Deleted tag ${tagName}.`);
+              // Delete the tag
+              await github.git.deleteRef({
+                owner: owner,
+                repo: repo,
+                ref: `tags/${tagName}`
+              });
+              console.log(`Deleted tag ${tagName}.`);
+            }
           } catch (error) {
             if (error.status === 404) {
               console.log(`Release with tag ${tagName} not found.`);
@@ -71,6 +67,11 @@ jobs:
               throw error;
             }
           }
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: humanity-theme-playground-zip
+        path: humanity-theme-playground.zip
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
