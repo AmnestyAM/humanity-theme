@@ -8,13 +8,13 @@
  */
 ?>
 
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"8px","bottom":"8px"}}},"className":"custom-card is-style-light","layout":{"type":"constrained","contentSize":"350px","wideSize":"480px"}} -->
+<!-- wp:group {"style":{"spacing":{"padding":{"top":"8px","bottom":"8px"}}},"className":"custom-card is-style-light"} -->
 <div class="wp-block-group custom-card is-style-light" style="padding-top:8px;padding-bottom:8px"><!-- wp:heading {"textAlign":"center"} -->
 <h2 class="wp-block-heading has-text-align-center">(Label)</h2>
 <!-- /wp:heading -->
 
-<!-- wp:image {"hideImageCopyright":true} -->
-<figure class="wp-block-image"><img alt=""/></figure>
+<!-- wp:image {"aspectRatio":"16/9","scale":"cover","hideImageCopyright":true} -->
+<figure class="wp-block-image"><img alt="" style="aspect-ratio:16/9;object-fit:cover"/></figure>
 <!-- /wp:image -->
 
 <!-- wp:paragraph {"align":"center"} -->
